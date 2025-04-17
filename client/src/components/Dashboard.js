@@ -1,39 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getPointsBalance, getRewards, getRedemptionHistory } from '../services/api';
+import { getUserProfile, getRewards, getRedemptionHistory } from '../services/api';
 
 const Dashboard = () => {
-  const [pointsBalance, setPointsBalance] = useState(0);
-  const [recentRewards, setRecentRewards] = useState([]);
-  const [recentRedemptions, setRecentRedemptions] = useState([]);
+  const [points, setPoints] = useState(0);
+  const [rewards, setRewards] = useState([]);
+  const [redemptions, setRedemptions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    const fetchData = async () => {
       try {
         setLoading(true);
-        
-        // Fetch data in parallel
-        const [pointsData, rewardsData, redemptionsData] = await Promise.all([
-          getPointsBalance(),
+
+        const [userData, rewardsData, redemptionsData] = await Promise.all([
+          getUserProfile(),
           getRewards(),
           getRedemptionHistory()
         ]);
         
-        setPointsBalance(pointsData.points);
-        setRecentRewards(rewardsData.slice(0, 3)); // Show only first 3 rewards
-        setRecentRedemptions(redemptionsData.slice(0, 3)); // Show only first 3 redemptions
-        
-        setLoading(false);
+        setPoints(userData.points);
+        setRewards(rewardsData.slice(0, 3));
+        setRedemptions(redemptionsData.slice(0, 3));
+        setError(null);
       } catch (err) {
-        setError('Failed to load dashboard data. Please try again later.');
+        setError('Failed to load dashboard data');
+        console.error('Error loading dashboard:', err);
+      } finally {
         setLoading(false);
-        console.error('Error fetching dashboard data:', err);
       }
     };
 
-    fetchDashboardData();
+    fetchData();
   }, []);
 
   if (loading) {
@@ -49,7 +48,7 @@ const Dashboard = () => {
       <h2>Dashboard</h2>
       
       <div className="points-display">
-        Your Current Points: {pointsBalance.toLocaleString()}
+        Your Current Points: {points.toLocaleString()}
       </div>
       
       <div className="dashboard-grid">
@@ -60,9 +59,9 @@ const Dashboard = () => {
           </div>
           
           <div className="card-content">
-            {recentRewards.length > 0 ? (
+            {rewards.length > 0 ? (
               <ul className="dashboard-rewards-list">
-                {recentRewards.map(reward => (
+                {rewards.map(reward => (
                   <li key={reward.id}>
                     <Link to={`/rewards/${reward.id}`}>{reward.name}</Link>
                     <span className="reward-points">{reward.points_cost} pts</span>
@@ -82,9 +81,9 @@ const Dashboard = () => {
           </div>
           
           <div className="card-content">
-            {recentRedemptions.length > 0 ? (
+            {redemptions.length > 0 ? (
               <ul className="dashboard-history-list">
-                {recentRedemptions.map(redemption => (
+                {redemptions.map(redemption => (
                   <li key={redemption.id}>
                     <div className="history-reward">{redemption.reward.name}</div>
                     <div className="history-date">

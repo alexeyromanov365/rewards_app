@@ -6,9 +6,9 @@ const API_URL = '/api/v1';
 // In a real app, this would come from authentication
 const USER_ID = 1; 
 
-export const getPointsBalance = async () => {
+export const getUserProfile = async () => {
   try {
-    const response = await axios.get(`${API_URL}/users/${USER_ID}/points_balance`);
+    const response = await axios.get(`${API_URL}/users/${USER_ID}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching points balance:', error);
@@ -50,7 +50,7 @@ export const redeemReward = async (rewardId) => {
 
 export const getRedemptionHistory = async () => {
   try {
-    const response = await axios.get(`${API_URL}/users/${USER_ID}/redemptions/history`);
+    const response = await axios.get(`${API_URL}/users/${USER_ID}/redemptions`);
     return response.data;
   } catch (error) {
     console.error('Error fetching redemption history:', error);

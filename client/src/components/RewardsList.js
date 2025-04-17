@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getRewards, getPointsBalance } from '../services/api';
+import { getUserProfile, getRewards } from '../services/api';
 
 const RewardsList = () => {
+  const [points, setPoints] = useState(0);
   const [rewards, setRewards] = useState([]);
-  const [pointsBalance, setPointsBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,20 +12,20 @@ const RewardsList = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
-        // Fetch rewards and points balance in parallel
-        const [rewardsData, pointsData] = await Promise.all([
-          getRewards(),
-          getPointsBalance()
+
+        const [userData, rewardsData] = await Promise.all([
+          getUserProfile(),
+          getRewards()
         ]);
         
+        setPoints(userData.points);
         setRewards(rewardsData);
-        setPointsBalance(pointsData.points);
-        setLoading(false);
+        setError(null);
       } catch (err) {
-        setError('Failed to load rewards. Please try again later.');
+        setError('Failed to load rewards');
+        console.error('Error loading rewards:', err);
+      } finally {
         setLoading(false);
-        console.error('Error fetching rewards:', err);
       }
     };
 
@@ -45,7 +45,7 @@ const RewardsList = () => {
       <h2>Available Rewards</h2>
       
       <div className="points-display">
-        Your Current Points: {pointsBalance.toLocaleString()}
+        Your Current Points: {points.toLocaleString()}
       </div>
       
       {rewards.length > 0 ? (
@@ -64,10 +64,10 @@ const RewardsList = () => {
               <div className="card-footer">
                 <Link 
                   to={`/rewards/${reward.id}`} 
-                  className={`btn ${pointsBalance >= reward.points_cost ? 'btn-primary' : 'btn-disabled'}`}
-                  aria-disabled={pointsBalance < reward.points_cost}
+                  className={`btn ${points >= reward.points_cost ? 'btn-primary' : 'btn-disabled'}`}
+                  aria-disabled={points < reward.points_cost}
                 >
-                  {pointsBalance >= reward.points_cost ? 'View Details' : 'Not Enough Points'}
+                  {points >= reward.points_cost ? 'View Details' : 'Not Enough Points'}
                 </Link>
               </div>
             </div>

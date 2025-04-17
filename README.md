@@ -2,7 +2,7 @@
 
 A web application for redeeming rewards with points. This app includes:
 
-- View current reward points balance
+- View user profile with points balance
 - Browse available rewards
 - Redeem rewards using points
 - View redemption history
@@ -10,14 +10,15 @@ A web application for redeeming rewards with points. This app includes:
 ## Technology Stack
 
 - **Backend**: Ruby on Rails 8.0.2 with SQLite database
-- **Frontend**: React
+- **Frontend**: React with Vite
+- **Testing**: RSpec, Factory Bot, Shoulda Matchers
 
 ## Setup
 
 ### Prerequisites
 
 - Ruby 3.4.3
-- Node.js and npm
+- Node.js v.18 and npm
 
 ### Backend Setup
 
@@ -46,21 +47,21 @@ A web application for redeeming rewards with points. This app includes:
    npm install
    ```
 
-2. Start the React development server:
+2. Start the development server:
    ```
-   npm start
+   npm run dev
    ```
-   This will start the frontend on port 3001 and proxy API requests to the Rails server on port 3000.
+   This will start the frontend on port 5173 and proxy API requests to the Rails server on port 3000.
 
 ## Features
 
 ### API Endpoints
 
-- **GET /api/v1/users/:id/points_balance** - Get user's current points balance
+- **GET /api/v1/users/:id** - Get user profile with points balance
 - **GET /api/v1/rewards** - Get list of available rewards
 - **GET /api/v1/rewards/:id** - Get details for a specific reward
-- **POST /api/v1/users/:id/redemptions** - Redeem a reward
-- **GET /api/v1/users/:id/redemptions/history** - Get user's redemption history
+- **POST /api/v1/users/:user_id/redemptions** - Redeem a reward
+- **GET /api/v1/users/:user_id/redemptions** - Get user's redemption history
 
 ### User Interface
 
@@ -69,18 +70,10 @@ A web application for redeeming rewards with points. This app includes:
 - **Reward Detail**: Shows detailed information about a reward and allows redemption
 - **Redemption History**: Shows all past redemptions
 
-## Demo Users
-
-The seed data includes the following test users:
-
-- John Smith (5000 points)
-- Jane Doe (2500 points)
-- Bob Johnson (7500 points)
-
-For demo purposes, the app uses John Smith's account (ID: 1).
-
 ## Development Notes
 
-- For a real production app, proper authentication would be implemented
-- Points deduction happens automatically when redeeming a reward
+- The app uses a fixed user ID for demonstration purposes
+- Points deduction happens in the controller when redeeming a reward
 - Rewards can be marked as unavailable
+- API responses are formatted using Jbuilder templates
+- The project uses RSpec for testing with Factory Bot for test data

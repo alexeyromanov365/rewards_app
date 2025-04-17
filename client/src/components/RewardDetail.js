@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getRewardById, getPointsBalance, redeemReward } from '../services/api';
+import { getUserProfile, getRewardById, redeemReward } from '../services/api';
 
 const RewardDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [points, setPoints] = useState(0);
   const [reward, setReward] = useState(null);
-  const [pointsBalance, setPointsBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
   const [redeeming, setRedeeming] = useState(false);
   const [redeemSuccess, setRedeemSuccess] = useState(false);
   const [redeemError, setRedeemError] = useState(null);
@@ -17,20 +18,19 @@ const RewardDetail = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        
-        // Fetch reward details and points balance in parallel
-        const [rewardData, pointsData] = await Promise.all([
-          getRewardById(id),
-          getPointsBalance()
+        const [userData, rewardData] = await Promise.all([
+          getUserProfile(),
+          getRewardById(id)
         ]);
         
+        setPoints(userData.points);
         setReward(rewardData);
-        setPointsBalance(pointsData.points);
-        setLoading(false);
+        setError(null);
       } catch (err) {
-        setError('Failed to load reward details. Please try again later.');
+        setError('Failed to load reward details');
+        console.error('Error loading reward:', err);
+      } finally {
         setLoading(false);
-        console.error('Error fetching reward details:', err);
       }
     };
 
@@ -46,8 +46,8 @@ const RewardDetail = () => {
       
       setRedeemSuccess(true);
       // Update points balance after redemption
-      const pointsData = await getPointsBalance();
-      setPointsBalance(pointsData.points);
+      const userData = await getUserProfile();
+      setPoints(userData.points);
       
       setRedeeming(false);
       
@@ -74,14 +74,14 @@ const RewardDetail = () => {
     return <div className="error">Reward not found.</div>;
   }
 
-  const canRedeem = pointsBalance >= reward.points_cost && reward.available;
+  const canRedeem = points >= reward.points_cost && reward.available;
 
   return (
     <div className="reward-detail">
       <h2>Reward Details</h2>
       
       <div className="points-display">
-        Your Current Points: {pointsBalance.toLocaleString()}
+        Your Current Points: {points.toLocaleString()}
       </div>
       
       <div className="card">
@@ -130,9 +130,9 @@ const RewardDetail = () => {
         </div>
       </div>
       
-      {!canRedeem && pointsBalance < reward.points_cost && (
+      {!canRedeem && points < reward.points_cost && (
         <div className="not-enough-points">
-          <p>You need {reward.points_cost - pointsBalance} more points to redeem this reward.</p>
+          <p>You need {reward.points_cost - points} more points to redeem this reward.</p>
         </div>
       )}
     </div>
