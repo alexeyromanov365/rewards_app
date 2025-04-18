@@ -16,7 +16,7 @@ module Api
         @redemption = service.create_redemption
       rescue ActiveRecord::RecordNotFound => e
         render json: { error: e.message }, status: :not_found
-      rescue RedemptionService::ValidationError => e
+      rescue RedemptionService::ValidationError, RedemptionValidator::ValidationError => e
         render json: { error: e.message }, status: :unprocessable_entity
       end
     end

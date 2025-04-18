@@ -32,4 +32,4 @@ class RedemptionService
   end
 
   class ValidationError < StandardError; end
-end 
+end

@@ -11,4 +11,4 @@ class UserPointsUpdater
   private
 
   attr_reader :user, :points_to_deduct
-end 
+end
