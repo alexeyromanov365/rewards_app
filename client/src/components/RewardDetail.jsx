@@ -49,7 +49,7 @@ const RewardDetail = () => {
       
       setTimeout(() => {
         navigate('/history');
-      }, 500);
+      }, 1000);
     } catch (err) {
       setRedeemError('Failed to redeem reward. Please try again.');
       console.error('Error redeeming reward:', err);
