@@ -14,7 +14,7 @@ class RedemptionValidator
   attr_reader :user, :reward
 
   def validate_reward_availability!
-    raise ValidationError, "Reward not available" unless reward.available
+    raise ValidationError, "Reward is not available" unless reward.available
   end
 
   def validate_user_points!
