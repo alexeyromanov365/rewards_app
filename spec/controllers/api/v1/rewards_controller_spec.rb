@@ -65,4 +65,4 @@ RSpec.describe Api::V1::RewardsController, type: :controller do
       end
     end
   end
-end 
+end

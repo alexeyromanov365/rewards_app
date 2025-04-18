@@ -159,4 +159,4 @@ RSpec.describe Api::V1::RedemptionsController, type: :controller do
       end
     end
   end
-end 
+end

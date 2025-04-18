@@ -52,12 +52,12 @@ const RewardsList = () => {
         <div className="rewards-grid">
           {rewards.map(reward => (
             <div key={reward.id} className="card reward-card">
-              <div className="card-header">
+              <div className="card-header" style={{ height: '35%' }}>
                 <h3 className="card-title">{reward.name}</h3>
                 <span className="reward-points">{reward.points_cost} pts</span>
               </div>
               
-              <div className="card-content">
+              <div className="card-content" style={{ height: '30%' }}>
                 <p>{reward.description}</p>
               </div>
               

@@ -53,7 +53,7 @@ const RewardDetail = () => {
       // Redirect to history page after a short delay
       setTimeout(() => {
         navigate('/history');
-      }, 2000);
+      }, 1000);
     } catch (err) {
       setRedeemError('Failed to redeem reward. Please try again.');
       setRedeeming(false);
@@ -129,7 +129,7 @@ const RewardDetail = () => {
         </div>
       </div>
       
-      {!canRedeem && points < reward.points_cost && (
+      {!canRedeem && points < reward.points_cost && !redeemSuccess && (
         <div className="not-enough-points">
           <p>You need {reward.points_cost - points} more points to redeem this reward.</p>
         </div>
