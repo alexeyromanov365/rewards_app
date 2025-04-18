@@ -34,5 +34,6 @@
 /config/master.key
 
 .idea
+.github
 
 client/node_modules
