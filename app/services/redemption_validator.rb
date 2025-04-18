@@ -22,4 +22,4 @@ class RedemptionValidator
   end
 
   class ValidationError < StandardError; end
-end 
+end
