@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 
 // Components
-import Dashboard from './components/Dashboard';
-import RewardsList from './components/RewardsList';
-import RewardDetail from './components/RewardDetail';
-import RedemptionHistory from './components/RedemptionHistory';
+import Dashboard from './components/Dashboard.jsx';
+import RewardsList from './components/RewardsList.jsx';
+import RewardDetail from './components/RewardDetail.jsx';
+import RedemptionHistory from './components/RedemptionHistory.jsx';
 
 function App() {
   return (

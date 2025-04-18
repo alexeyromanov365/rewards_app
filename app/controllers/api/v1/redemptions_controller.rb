@@ -12,31 +12,12 @@ module Api
         user = User.find(params[:user_id])
         reward = Reward.find(params[:reward_id])
 
-        if !reward.available
-          render json: { error: "Reward not available" }, status: :unprocessable_entity
-          return
-        end
-
-        if user.points < reward.points_cost
-          render json: { error: "Insufficient points" }, status: :unprocessable_entity
-          return
-        end
-
-        @redemption = Redemption.new(
-          user: user,
-          reward: reward,
-          redeemed_at: Time.current
-        )
-
-        if @redemption.save
-          user.update(points: user.points - reward.points_cost)
-
-          @redemption
-        else
-          render json: { errors: @redemption.errors.full_messages }, status: :unprocessable_entity
-        end
+        service = RedemptionService.new(user, reward)
+        @redemption = service.create_redemption
       rescue ActiveRecord::RecordNotFound => e
         render json: { error: e.message }, status: :not_found
+      rescue RedemptionService::ValidationError => e
+        render json: { error: e.message }, status: :unprocessable_entity
       end
     end
   end
